@@ -5,11 +5,17 @@ An old project from my university days refreshed to modern C++, with automated t
 
 Basic compiliation and running notes:
 ```
-g++ -Wall -std=c++14 -c bit_op_lib.cc && \
-g++ -Wall -std=c++14 bit_op_lib.o bit_op_lib_test.cc && \
-./a.out
-
+make tester
 ```
+Running tests:
+```
+./tester
+```
+Cleaning up
+```
+make clean
+```
+
 
 TODO
 - Complete port of the bit operations library, with tests
