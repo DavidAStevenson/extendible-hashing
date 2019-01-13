@@ -33,11 +33,11 @@ $(CATCHOBJ): $(CATCHSRC)
 #
 # build a googletest executable
 #
-GTESTDIR := test/gtest
+GTEST_DIR := test/gtest
 
 $(GTEST): gtest-all.o
 
-gtest-all.o: $(GTESTDIR)/gtest-all.cc
+gtest-all.o: $(GTEST_DIR)/gtest-all.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
