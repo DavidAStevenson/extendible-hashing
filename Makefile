@@ -12,19 +12,18 @@ INCDIRS := -I$(LIBDIR)
 #
 
 # # bit_op_lib.cc  bit_op_lib.h  bit_op_lib.o  bit_op_lib_test.cc
-CC = g++
-CFLAGS = -g -Wall -std=c++11
+CXXFLAGS = -std=c++14 -Wall -Wextra
 
 default: $(CATCH2)
 
 $(CATCH2): bit_op_lib.o $(TESTOBJ)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(TESTOBJ): $(TESTDIR)/bit_op_lib_catch2_test.cc
-	$(CC) $(CFLAGS) $(INCDIRS) -c $<
+	$(CXX) $(CXXFLAGS) $(INCDIRS) -c $<
 
 bit_op_lib.o: $(LIBDIR)/bit_op_lib.cc $(LIBDIR)/bit_op_lib.h
-	$(CC) $(CFLAGS) -c $<
+	$(CXX) $(CXXFLAGS) -c $<
 
 clean:
 	$(RM) $(CATCH2) $(TESTOBJ) *.o
