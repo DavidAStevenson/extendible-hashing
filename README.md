@@ -5,11 +5,11 @@ An old project from my university days refreshed to modern C++, with automated t
 
 Basic compiliation and running notes:
 ```
-make tester
+make [catch2test]
 ```
 Running tests:
 ```
-./tester
+./catch2test
 ```
 Cleaning up
 ```
