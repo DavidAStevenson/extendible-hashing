@@ -27,7 +27,7 @@ bit_op_lib.o: $(LIBDIR)/bit_op_lib.cc $(LIBDIR)/bit_op_lib.h
 CATCHSRC  := $(wildcard $(TESTDIR)/*catch2*.cc)
 CATCHOBJ  := $(patsubst $(TESTDIR)/%.cc,$(OBJDIR)/%.o,$(CATCHSRC))
 
-$(CATCH2): bit_op_lib.o $(CATCHOBJ)
+$(CATCH2): $(warning CATCHOBJ is $(CATCHOBJ)) bit_op_lib.o $(CATCHOBJ)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(CATCHOBJ): $(OBJDIR)/%.o: $(TESTDIR)/%.cc
@@ -41,8 +41,8 @@ $(CATCHOBJ): $(OBJDIR)/%.o: $(TESTDIR)/%.cc
 GTEST_DIR := test/gtest
 
 GTESTSRC  := $(wildcard $(TESTDIR)/*gtest.cc)
-GTESTOBJ  := $(patsubst $(TESTDIR)/%.cc,%.o,$(GTESTSRC))
-GTESTDEPS := $(patsubst $(TESTDIR)/%.cc,%.d,$(GTESTSRC))
+GTESTOBJ  := $(patsubst $(TESTDIR)/%.cc,$(OBJDIR)/%.o,$(GTESTSRC))
+GTESTDEPS := $(patsubst $(TESTDIR)/%.cc,$(OBJDIR)/%.d,$(GTESTSRC))
 
 LDFLAGS := -pthread
 $(GTEST): gtest-all.o bit_op_lib.o $(GTESTOBJ)
@@ -52,12 +52,14 @@ gtest-all.o: $(GTEST_DIR)/gtest-all.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 GTESTINC := -I$(GTEST_DIR)
-$(GTESTOBJ): %.o: $(TESTDIR)/%.cc
+$(GTESTOBJ): $(OBJDIR)/%.o: $(TESTDIR)/%.cc
+	$(dir_guard)
 	$(CXX) $(CXXFLAGS) $(INCDIRS) $(GTESTINC) -c $< -o $@
 
-%.d: $(TESTDIR)/%.cc
+$(OBJDIR)/%.d: $(TESTDIR)/%.cc
+	$(dir_guard)
 	$(CXX) $(INCDIRS) -MM $< \
-		| sed -e '1 s%^%$@ %' \
+		| sed -e '1 s%^%$@ %' -e '1 s% % $(OBJDIR)/%' \
 		> $@
 
 -include $(GTESTDEPS)
