@@ -6,13 +6,14 @@ Date     | June 2000                                                            
 Author   | David Stevenson                                                              |
 =========================================================================================
 */
-#include "indexholder.h"
-#include <iostream.h>
-#include "bitOpLibrary.h"
+#include <iostream>
 
 // For file system methods and constants 
 #include <unistd.h>
 #include <fcntl.h> 
+
+#include "indexholder.h"
+#include "bit_op_lib.h"
 
 /*
 =========================================================================================
@@ -82,7 +83,7 @@ Load(int fileDescriptor
 		  &*_indexPointer,                       // buffer to read to
 		  (sizeof(int) * GetNumberOfAddresses()) // size of data to read
 		  );
-  if ( dataRead != (sizeof(int) * GetNumberOfAddresses()) ){
+  if ( static_cast<size_t>(dataRead) != (sizeof(int) * GetNumberOfAddresses()) ){
     return false;
   }
   return true;
@@ -116,7 +117,7 @@ Write(int fileDescriptor
 		    _indexPointer, 
 		    (sizeof(int) * GetNumberOfAddresses()) 
 		    );
-  if ( dataWrote != (sizeof(int) * GetNumberOfAddresses()) ){
+  if ( static_cast<size_t>(dataWrote) != (sizeof(int) * GetNumberOfAddresses()) ){
     return false;
   }
   return true;
@@ -191,7 +192,7 @@ DecreaseDepth()
     // Copy the old pointer values back into the smaller index
     for (int i = 0; i < oldNumOfAddresses; i++){
       // Assign the xxx pointer
-      //cout << "depth decrease " << i << endl << flush;
+      //std::cout << "depth decrease " << i << std::endl << std::flush;
       tempIndex[i] = _indexPointer[i];
     }
     // Update depth
@@ -257,9 +258,9 @@ Print()
   char posString[_indexDepth + 1];                      // Get integers in binary string
   for (int i = 0; i < GetNumberOfAddresses(); i++){
     if (IntInBinary(i, _indexDepth, posString)){
-      cout << posString << "->" << _indexPointer[i] << endl << flush;
+      std::cout << posString << "->" << _indexPointer[i] << std::endl << std::flush;
     } else {
-      cout << "IntInBinary error..." << endl << flush;
+      std::cout << "IntInBinary error..." << std::endl << std::flush;
     }
   }
 }
