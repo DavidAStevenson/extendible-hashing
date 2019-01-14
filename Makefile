@@ -47,7 +47,7 @@ $(GTEST): gtest-all.o bit_op_lib.o $(GTESTOBJ)
 gtest-all.o: $(GTEST_DIR)/gtest-all.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-GTESTINC := -Ilib:test/gtest
+GTESTINC := -Itest/gtest
 $(GTESTOBJ): %.o: $(TESTDIR)/%.cc
 	$(warning gtest object pattern commands)
 	$(CXX) $(CXXFLAGS) $(INCDIRS) $(GTESTINC) -c $< -o $@
