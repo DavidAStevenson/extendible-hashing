@@ -5,30 +5,34 @@ CATCH2  := catch2test
 GTEST   := gtest
 
 TESTDIR := test
+OBJDIR  := obj
 
 INCDIRS := -I$(LIBDIR)
 
 # # bit_op_lib.cc  bit_op_lib.h  bit_op_lib.o  bit_op_lib_test.cc
 CXXFLAGS = -std=c++14 -Wall -Wextra
 
+dir_guard=@mkdir -p $(@D)
+
 default: $(CATCH2) $(GTEST)
 
 bit_op_lib.o: $(LIBDIR)/bit_op_lib.cc $(LIBDIR)/bit_op_lib.h
 	$(CXX) $(CXXFLAGS) -c $<
+
 
 #------------------------------------------------------------------------------
 #
 # build a catch2 test executable
 #
 CATCHSRC  := $(wildcard $(TESTDIR)/*catch2*.cc)
-CATCHOBJ  := $(patsubst $(TESTDIR)/%.cc,%.o,$(CATCHSRC))
+CATCHOBJ  := $(patsubst $(TESTDIR)/%.cc,$(OBJDIR)/%.o,$(CATCHSRC))
 
-$(CATCH2): bit_op_lib.o $(warning CATCHOBJ is $(CATCHOBJ)) $(CATCHOBJ)
+$(CATCH2): bit_op_lib.o $(CATCHOBJ)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(CATCHOBJ): %.o: $(TESTDIR)/%.cc
-	$(warning catch2 object pattern commands)
-	$(CXX) $(CXXFLAGS) $(INCDIRS) -c $<
+$(CATCHOBJ): $(OBJDIR)/%.o: $(TESTDIR)/%.cc
+	$(dir_guard)
+	$(CXX) $(CXXFLAGS) $(INCDIRS) -c $< -o $@
 
 #------------------------------------------------------------------------------
 #
@@ -49,7 +53,6 @@ gtest-all.o: $(GTEST_DIR)/gtest-all.cc
 
 GTESTINC := -I$(GTEST_DIR)
 $(GTESTOBJ): %.o: $(TESTDIR)/%.cc
-	$(warning gtest object pattern commands)
 	$(CXX) $(CXXFLAGS) $(INCDIRS) $(GTESTINC) -c $< -o $@
 
 %.d: $(TESTDIR)/%.cc
