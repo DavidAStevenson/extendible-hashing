@@ -39,7 +39,7 @@ TEST(TestingBits, TestSecondLowestBit) {
 TEST(SettingBits, SettingSingleBits) {
   int results[8] = {1,2,4,8,16,32,64,128};
   for (int bit = 0; bit < 8; bit++) {
-    int target = 0; 
+    int target = 0;
     BitSet(target, bit);
     ASSERT_EQ(results[bit], target);
   }
