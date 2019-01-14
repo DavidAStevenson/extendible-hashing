@@ -1,7 +1,8 @@
 # extendible-hashing
 An old project from my university days refreshed to modern C++, with automated testing added
 
-- Catch2 is used testing.
+- Catch2 is used for testing. (Not included in this repo.)
+- GoogleTest is also used for testing.
 
 Basic compiliation and running notes:
 ```
@@ -24,11 +25,9 @@ make clean
 - bit operations library compiled and has tests
   - some tests with catch2
   - more tests with googletest (better coverage)
-- indexholder discovered to not even be calling any bit_op_lib functions, however!
-  - so next step is to add tests on indexholder
-  - there is an old test file that may give some useful tips on testing / using it
-  - perhaps the intent had been to extra bit operations out of indexholder, into bit_op_lib?
-  - if so, adding tests around indexholder first, then changing indexholder implementation to use bit_op_lib could be the way to go.
+- indexholder discovered to not even be calling any bit_op_lib functions, however! I probably had intended to refactor common operations into it, but never completed the job.
+  - next step is to add tests on indexholder, and fix bugs
+  - then change indexholder implementation to use bit_op_lib
 
 # TODO
 
