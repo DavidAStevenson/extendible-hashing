@@ -26,8 +26,7 @@ CATCHOBJ  := $(patsubst $(TESTDIR)/%.cc,%.o,$(CATCHSRC))
 $(CATCH2): bit_op_lib.o $(warning CATCHOBJ is $(CATCHOBJ)) $(CATCHOBJ)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-# BUGS here... this pattern is the same as the one for gtest objects...
-%.o: $(TESTDIR)/%.cc
+$(CATCHOBJ): %.o: $(TESTDIR)/%.cc
 	$(warning catch2 object pattern commands)
 	$(CXX) $(CXXFLAGS) $(INCDIRS) -c $<
 
@@ -49,7 +48,7 @@ gtest-all.o: $(GTEST_DIR)/gtest-all.cc
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 GTESTINC := -Ilib:test/gtest
-%.o: $(TESTDIR)/%.cc
+$(GTESTOBJ): %.o: $(TESTDIR)/%.cc
 	$(warning gtest object pattern commands)
 	$(CXX) $(CXXFLAGS) $(INCDIRS) $(GTESTINC) -c $< -o $@
 
