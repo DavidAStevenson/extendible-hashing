@@ -1,10 +1,10 @@
-#define CATCH_CONFIG_MAIN
+// #define CATCH_CONFIG_MAIN
 
 #include <catch2/catch.hpp>
 
 #include "bit_op_lib.h"
 
-TEST_CASE("Set lowest bit of 0 results in 1", "[single-file]") {
+TEST_CASE("Set lowest bit of 0 results in 1", "[BitSet]") {
 	int value = 0;
 	BitSet(value, 0);
 	REQUIRE(value == 1);
@@ -53,19 +53,19 @@ TEST_CASE("Set lowest bit of 0 results in 1", "[single-file]") {
 	*/
 }
 
-TEST_CASE("Clear lowest bit of 1 results in 0", "[single-file]") {
+TEST_CASE("Clear lowest bit of 1 results in 0", "[BitClear]") {
 	int value = 1;
 	BitClear(value, 0);
 	REQUIRE(value == 0);
 }
 
-TEST_CASE("Clear lowest bit of 0 results in 0 (idempotent)", "[single_file]") {
+TEST_CASE("Clear lowest bit of 0 results in 0 (idempotent)", "[BitClear]") {
 	int value = 0;
 	BitClear(value, 0);
 	REQUIRE(value == 0);
 }
 
-TEST_CASE() {
+TEST_CASE("Test the testing of whether bits are set", "[BitTest]") {
   int result = BitTest(0, 0);
   REQUIRE(result == 0);
 

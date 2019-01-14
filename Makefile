@@ -20,13 +20,14 @@ bit_op_lib.o: $(LIBDIR)/bit_op_lib.cc $(LIBDIR)/bit_op_lib.h
 #
 # build a catch2 test executable
 #
-CATCHSRC := $(wildcard $(TESTDIR)/*catch2_test.cc)
-CATCHOBJ := $(patsubst $(TESTDIR)/%.cc,%.o,$(CATCHSRC))
+CATCHSRC  := $(wildcard $(TESTDIR)/*catch2*.cc)
+CATCHOBJ  := $(patsubst $(TESTDIR)/%.cc,%.o,$(CATCHSRC))
+#CATCHDEPS := $(patsubst $(TESTDIR)/%.cc,%.d,$(CATCHSRC))
 
 $(CATCH2): bit_op_lib.o $(CATCHOBJ)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(CATCHOBJ): $(CATCHSRC)
+%.o: $(TESTDIR)/%.cc
 	$(CXX) $(CXXFLAGS) $(INCDIRS) -c $<
 
 #------------------------------------------------------------------------------
