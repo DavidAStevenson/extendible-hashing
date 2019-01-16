@@ -168,7 +168,7 @@ IncreaseDepth()
 /*
 =========================================================================================
 Name     | DecreaseDepth
-Purpose  | Increase the bit depth of the index by 1, and copy all the old pointer values
+Purpose  | Decrease the bit depth of the index by 1, and copy all the old pointer values
          | into the new index.
 Notes    | If a decrease is possible then it must hold that the values in the first half
          | of the index match those values in the second half of the index (in the exact
