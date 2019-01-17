@@ -63,12 +63,11 @@ TEST_CASE("Create an indexholder with depth = 2", "[IndexHolder construction]") 
 }
 
 TEST_CASE("Increase/Decrease index depth - basic", "[IndexHolder-dynamism]") {
-  IndexHolder* ih = new IndexHolder();
+  IndexHolder* ih = new IndexHolder(1);
   REQUIRE(ih->GetDepth() == 1);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << 1));
 
   ih->IncreaseDepth();
-  // failing. TODO
   REQUIRE(ih->GetDepth() == 2);
   REQUIRE(ih->GetNumberOfAddresses() == (2 << 1));
 

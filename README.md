@@ -28,10 +28,14 @@ make clean
 - indexholder discovered to not even be calling any bit_op_lib functions, however! I probably had intended to refactor common operations into it, but never completed the job.
   - next step is to add tests on indexholder, and fix bugs
   - then change indexholder implementation to use bit_op_lib
+  - indexholder interface is unclear
+    - initial tests were failing, but after understanding the expected usage, resolved it
+	- rejuvenating this old code is an exercise, but typically something should be done about the interface
+	  - documentation at minimum, alternatively a better interface / implementation would be best
 
 # TODO
-
 - Complete port of the bit operations library, with tests
+- Complete port and tests of indexholder
 - Add a trimmed down Vagrantfile with just the necessary items to build and run
 
 # NOTES

@@ -7,6 +7,10 @@ class IndexHolder
 public:
 /*
 Constructor. If createInitial is true then an initial index of depth 1 is set up
+Poor documentation. Seems that default constructor is to be used in case of intending 
+to Load from a previously Written indexholder.
+And the constructor with initialDepth should be used when the index does not yet exist
+even in a file on disk.
 */
 IndexHolder();
 IndexHolder(int initialDepth);

@@ -20,16 +20,13 @@ Author   | David Stevenson                                                      
 Name     | Constructors
 =========================================================================================
 */
-IndexHolder::
-IndexHolder()
+IndexHolder::IndexHolder()
 {
   _indexDepth = 1;
   _indexPointer = 0;
 }
 
-IndexHolder::
-IndexHolder(int initialDepth                       // Initial depth
-	    )
+IndexHolder::IndexHolder(int initialDepth)
 {
   // Set up an index of initialDepth
   if ( !( (initialDepth >= 1) && (initialDepth <= 32) ) ){
