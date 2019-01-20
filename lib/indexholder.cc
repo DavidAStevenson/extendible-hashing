@@ -2,7 +2,7 @@
 =========================================================================================
 Name     | IndexHolder                                                                  |
 Purpose  | Hold an extendible index                                                     |
-Date     | June 2000                                                                    |
+Date     | June 2000, Jan 2019                                                          |
 Author   | David Stevenson                                                              |
 =========================================================================================
 */
@@ -23,7 +23,7 @@ Name     | Constructors
 IndexHolder::IndexHolder()
 {
   _indexDepth = 1;
-  _indexPointer = 0;
+  _indexPointer = nullptr;
 }
 
 IndexHolder::IndexHolder(int initialDepth)
@@ -44,8 +44,10 @@ Name     | Destructors
 IndexHolder::
 ~IndexHolder()
 {
-  delete _indexPointer;
-  
+  if (_indexPointer != nullptr) {
+    delete[] _indexPointer;
+    _indexPointer = nullptr;
+  }
 }
 
 bool
@@ -57,8 +59,10 @@ Load(int fileDescriptor
     return false;
   }
 
-  // Just in case the user stuffs up
-  delete _indexPointer;
+  if (_indexPointer != nullptr) {
+    delete[] _indexPointer;
+    _indexPointer = nullptr;
+  }
   
   // Seek to the start of the index
   lseek(fileDescriptor, 0, SEEK_SET);
@@ -158,7 +162,7 @@ IncreaseDepth()
   // Update depth
   _indexDepth = newDepth;
   // The new index is assigned
-  delete _indexPointer;
+  delete[] _indexPointer;
   _indexPointer = tempIndex;
 }
 
@@ -189,13 +193,15 @@ DecreaseDepth()
     // Copy the old pointer values back into the smaller index
     for (int i = 0; i < oldNumOfAddresses; i++){
       // Assign the xxx pointer
-      //std::cout << "depth decrease " << i << std::endl << std::flush;
-      tempIndex[i] = _indexPointer[i];
+      std::cout << "DecreaseDepth is out-of-order, ignoring address(" 
+			  << _indexPointer[i] << ")" << std::endl << std::flush;
+      // BUGGY
+      // tempIndex[i] = _indexPointer[i];
     }
     // Update depth
     _indexDepth = newDepth;
     // The new index is assigned
-    delete _indexPointer;
+    delete[] _indexPointer;
     _indexPointer = tempIndex;
     
     return true;
@@ -302,7 +308,7 @@ CreateIndex(int numOfAddresses
   // Point each element to the zeroth address
   for (int i = 0; i < numOfAddresses; i++){
     tempIndex[i] = 0;
-  }  
+  }
   return tempIndex;
 }
 

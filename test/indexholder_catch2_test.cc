@@ -7,11 +7,7 @@
 
 
 ////
-// IndexHolder();
-// IndexHolder(int initialDepth);
-// ~IndexHolder();
 
-// void IncreaseDepth();
 // bool DecreaseDepth();
 
 // int GetDepth();
@@ -54,9 +50,11 @@ TEST_CASE("Create an indexholder with depth = 1", "[IndexHolder construction]") 
 }
 
 TEST_CASE("Create an indexholder with depth = 2", "[IndexHolder construction]") {
-  IndexHolder* ih = new IndexHolder(2);
+  int depth = 2;
+  IndexHolder* ih = new IndexHolder(depth);
 
-  REQUIRE(ih->GetDepth() == 2);
+  REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
 
   delete ih;
   ih = nullptr;
@@ -76,23 +74,46 @@ TEST_CASE("Increase/Decrease index depth - basic", "[IndexHolder-dynamism]") {
   REQUIRE(ih->GetNumberOfAddresses() == (1 << 1));
 }
 
+TEST_CASE("Decrease index depth", "[IndexHolder-dynamism]") {
+  int depth = 3;
+  IndexHolder* ih = new IndexHolder(depth);
+  REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
+  //ih->Print();
+
+  REQUIRE(ih->DecreaseDepth() == true);
+  depth--;
+  REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
+  //ih->Print();
+  delete ih;
+  ih = nullptr;
+}
+
+/*
 TEST_CASE("Increase/Decrease index depth", "[IndexHolder-dynamism]") {
   int depth = 2;
   IndexHolder* ih = new IndexHolder(depth);
+
   ih->IncreaseDepth();
   depth++;
   REQUIRE(ih->GetDepth() == depth);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
 
   // Calling this is like crossing the streams - issues lurk
-  // ih->DecreaseDepth();
-  // depth--;
-  // REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->DecreaseDepth() == true);
+  depth--;
+  REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
 //  ih->DecreaseDepth();
 //  REQUIRE(ih->GetDepth() == 7);
 //  REQUIRE(ih->GetNumberOfAddresses() == (1 << 7));
+  ih->IncreaseDepth();
+  depth++;
+  REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
 }
-
+*/
 
 TEST_CASE("Run legacy test", "[Pending refactoring]") {
   int indexDepth = 1;

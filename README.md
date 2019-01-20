@@ -36,6 +36,7 @@ make clean
 # TODO
 - Complete port of the bit operations library, with tests
 - Complete port and tests of indexholder
+  - there is a bug in the reallocation of the index array upon depth changes to work through
 - Add a trimmed down Vagrantfile with just the necessary items to build and run
 
 # NOTES
@@ -47,3 +48,11 @@ make clean
   - https://latedev.wordpress.com/2014/11/08/generic-makefiles-with-gcc-and-gnu-make/
   - https://latedev.wordpress.com/2014/12/02/generic-makefiles-with-gcc-and-gnu-make-part-2/
 
+# LESSONS LEARNED
+- surprisingly, I was using plain "delete" against arrays in the original code
+  - when deleting arrays created on the heap with new, delete[] must be used, not delete
+  - this tidbit got a brief mention in my old C++ text, but perhaps I never knew this?
+- don't waste time going down the rabbit hole of memory issues
+  - just install valgrind, and learn the basics
+  - upon using valgrind, I was quickly able to identify an issue that resulted in program crashes
+  	- probably, back in 2000/2001, I had got stuck with this issue and that was where I left the code
