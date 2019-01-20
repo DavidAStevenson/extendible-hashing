@@ -7,16 +7,11 @@
 
 
 ////
-
 // bool DecreaseDepth();
-
-// int GetDepth();
-// int GetNumberOfAddresses();
 
 //void SetAddress(int index, int address);
 //int GetAddress(int index);
 
-//void Print();
 // bool Load(int fileDescriptor);
 // bool Write(int fileDescriptor);
 ////
@@ -109,8 +104,9 @@ TEST_CASE("Increase/Decrease index depth - basic", "[IndexHolder-dynamism]") {
   ih->DecreaseDepth();
   REQUIRE(ih->GetDepth() == 1);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << 1));
+  delete ih;
+  ih = nullptr;
 }
-
 
 TEST_CASE("Increase/Decrease index depth", "[IndexHolder-dynamism]") {
   int depth = 2;
@@ -135,6 +131,25 @@ TEST_CASE("Increase/Decrease index depth", "[IndexHolder-dynamism]") {
   depth++;
   REQUIRE(ih->GetDepth() == depth);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
+  delete ih;
+  ih = nullptr;
+}
+
+// TODO this is a start, but need to recall how depth changes affect the
+// existing addresses
+TEST_CASE("Set Addreses then increase depth", "[IndexHolder-dynamism]") {
+  IndexHolder* ih = new IndexHolder(1);
+  ih->SetAddress(0, 3);
+  ih->SetAddress(1, 7);
+  REQUIRE(ih->GetAddress(0) == 3);
+  REQUIRE(ih->GetAddress(1) == 7);
+  ih->Print();
+  ih->IncreaseDepth();
+  ih->Print();
+  REQUIRE(ih->DecreaseDepth() == true);
+  ih->Print();
+  delete ih;
+  ih = nullptr;
 }
 
 TEST_CASE("legacy test", "[Legacy-test-from-Y2K]") {
