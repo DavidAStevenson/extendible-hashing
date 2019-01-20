@@ -49,13 +49,50 @@ TEST_CASE("Create an indexholder with depth = 1", "[IndexHolder construction]") 
   ih = nullptr;
 }
 
-TEST_CASE("Create an indexholder with depth = 2", "[IndexHolder construction]") {
-  int depth = 2;
-  IndexHolder* ih = new IndexHolder(depth);
+TEST_CASE("Create indexholders with depth < 20", "[IndexHolder construction]") {
+  // Going to 31 results in 2GB of allocation
+  // the code doesn't handle it gracefully, so that's a problem...
+  // Keep it modest at 20
+  int max_depth = 20;
+  for (int i = 2; i < max_depth; i++) {
+    int depth = i;
+    IndexHolder* ih = new IndexHolder(depth);
 
+    REQUIRE(ih->GetDepth() == depth);
+    REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
+
+    delete ih;
+    ih = nullptr;
+  }
+}
+
+TEST_CASE("Increase index depth", "[IndexHolder-increase-depth]") {
+  int depth = 1;
+  IndexHolder* ih = new IndexHolder(depth);
   REQUIRE(ih->GetDepth() == depth);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
 
+  int target_depth = 5;
+  do {
+    ih->IncreaseDepth();
+    depth++;
+    REQUIRE(ih->GetDepth() == depth);
+    REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
+  } while (depth < target_depth);
+}
+
+TEST_CASE("Decrease index depth", "[IndexHolder-decrease-depth]") {
+  int depth = 3;
+  IndexHolder* ih = new IndexHolder(depth);
+  REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
+  //ih->Print();
+
+  REQUIRE(ih->DecreaseDepth() == true);
+  depth--;
+  REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
+  //ih->Print();
   delete ih;
   ih = nullptr;
 }
@@ -74,23 +111,7 @@ TEST_CASE("Increase/Decrease index depth - basic", "[IndexHolder-dynamism]") {
   REQUIRE(ih->GetNumberOfAddresses() == (1 << 1));
 }
 
-TEST_CASE("Decrease index depth", "[IndexHolder-dynamism]") {
-  int depth = 3;
-  IndexHolder* ih = new IndexHolder(depth);
-  REQUIRE(ih->GetDepth() == depth);
-  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
-  //ih->Print();
 
-  REQUIRE(ih->DecreaseDepth() == true);
-  depth--;
-  REQUIRE(ih->GetDepth() == depth);
-  REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
-  //ih->Print();
-  delete ih;
-  ih = nullptr;
-}
-
-/*
 TEST_CASE("Increase/Decrease index depth", "[IndexHolder-dynamism]") {
   int depth = 2;
   IndexHolder* ih = new IndexHolder(depth);
@@ -100,27 +121,31 @@ TEST_CASE("Increase/Decrease index depth", "[IndexHolder-dynamism]") {
   REQUIRE(ih->GetDepth() == depth);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
 
-  // Calling this is like crossing the streams - issues lurk
   REQUIRE(ih->DecreaseDepth() == true);
   depth--;
   REQUIRE(ih->GetDepth() == depth);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
-//  ih->DecreaseDepth();
-//  REQUIRE(ih->GetDepth() == 7);
-//  REQUIRE(ih->GetNumberOfAddresses() == (1 << 7));
+
+  ih->DecreaseDepth();
+  depth--;
+  REQUIRE(ih->GetDepth() == depth);
+  REQUIRE(ih->GetNumberOfAddresses() == (1 << depth));
+
   ih->IncreaseDepth();
   depth++;
   REQUIRE(ih->GetDepth() == depth);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
 }
-*/
 
-TEST_CASE("Run legacy test", "[Pending refactoring]") {
+TEST_CASE("legacy test", "[Legacy-test-from-Y2K]") {
   int indexDepth = 1;
   IndexHolder* myIndex = new IndexHolder(indexDepth);
   // TODO - no idea what these args mean...
   myIndex->SetAddress(1, 3);
   myIndex->SetAddress(2, 7);
+  REQUIRE(myIndex->GetAddress(1) == 3);
+  REQUIRE(myIndex->GetAddress(2) == -1);
+  myIndex->SetAddress(0, 7);
   myIndex->Print();
   /*
     cout << "Now print myIndex\n" << flush;
@@ -128,11 +153,17 @@ TEST_CASE("Run legacy test", "[Pending refactoring]") {
     cout << "Done\n" << flush;
     cout << "=============================" << endl << flush;
     cout << "now expand...\n";
-    myIndex->IncreaseDepth();
-    cout << "Now print the expanded myIndex\n" << flush;
+   */
+  myIndex->IncreaseDepth();
+  myIndex->Print();
+  /*
     myIndex->PrintIndex();
     cout << "=============================" << endl << flush;
     cout << "Now try to decrease the index size...\n";
+   */
+  REQUIRE(myIndex->DecreaseDepth() == true);
+  myIndex->Print();
+/*
     if (myIndex->DecreaseDepth()){
     cout << "SUCCESS! Now print the shrunken myIndex\n" << flush;
     myIndex->PrintIndex();
@@ -144,6 +175,9 @@ TEST_CASE("Run legacy test", "[Pending refactoring]") {
     cin >> input;
     cout << input << " points to " << myIndex->GetAddress(input) << endl;
   */
+  REQUIRE(myIndex->GetAddress(1) == 3);
+  REQUIRE(myIndex->GetAddress(0) == 7);
+
   int fd = open("testfile", O_RDWR | O_CREAT | O_TRUNC, 0600);
   REQUIRE (myIndex->Write(fd)); /* {
     std::cout << "Wrote file ok\n";
