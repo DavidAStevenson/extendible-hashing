@@ -302,6 +302,7 @@ IndexHolder::
 CreateIndex(int numOfAddresses
 	    )
 {
+  // BUGGY here (std:bad_alloc)
   // Allocate memory for new addresses
   int* tempIndex = new int[numOfAddresses];
   
