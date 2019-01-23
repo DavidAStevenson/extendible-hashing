@@ -81,13 +81,11 @@ TEST_CASE("Decrease index depth", "[IndexHolder-decrease-depth]") {
   IndexHolder* ih = new IndexHolder(depth);
   REQUIRE(ih->GetDepth() == depth);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
-  //ih->Print();
 
   REQUIRE(ih->DecreaseDepth() == true);
   depth--;
   REQUIRE(ih->GetDepth() == depth);
   REQUIRE(ih->GetNumberOfAddresses() == (1 << (depth)));
-  //ih->Print();
   delete ih;
   ih = nullptr;
 }
@@ -135,19 +133,42 @@ TEST_CASE("Increase/Decrease index depth", "[IndexHolder-dynamism]") {
   ih = nullptr;
 }
 
-// TODO this is a start, but need to recall how depth changes affect the
-// existing addresses
 TEST_CASE("Set Addreses then increase depth", "[IndexHolder-dynamism]") {
   IndexHolder* ih = new IndexHolder(1);
   ih->SetAddress(0, 3);
   ih->SetAddress(1, 7);
   REQUIRE(ih->GetAddress(0) == 3);
   REQUIRE(ih->GetAddress(1) == 7);
-  ih->Print();
   ih->IncreaseDepth();
-  ih->Print();
+  REQUIRE(ih->GetAddress(0) == 3);
+  REQUIRE(ih->GetAddress(1) == 7);
+  REQUIRE(ih->GetAddress(2) == 3);
+  REQUIRE(ih->GetAddress(3) == 7);
+
   REQUIRE(ih->DecreaseDepth() == true);
-  ih->Print();
+  REQUIRE(ih->GetAddress(0) == 3);
+  REQUIRE(ih->GetAddress(1) == 7);
+  delete ih;
+  ih = nullptr;
+}
+
+TEST_CASE("Can't decrease depth with non-matching buddies", "[IndexHolder-dynamism]") {
+  IndexHolder* ih = new IndexHolder(1);
+  ih->SetAddress(0, 3);
+  ih->SetAddress(1, 7);
+  ih->IncreaseDepth();
+  ih->SetAddress(2, 4); // buddy indexes (0, 2) have different addresses
+  REQUIRE(ih->GetAddress(0) == 3);
+  REQUIRE(ih->GetAddress(1) == 7);
+  REQUIRE(ih->GetAddress(2) == 4);
+  REQUIRE(ih->GetAddress(3) == 7);
+
+  REQUIRE(ih->DecreaseDepth() == false); 
+  // addresses have not changed because depth couldn't be decreased
+  REQUIRE(ih->GetAddress(0) == 3);
+  REQUIRE(ih->GetAddress(1) == 7);
+  REQUIRE(ih->GetAddress(2) == 4);
+  REQUIRE(ih->GetAddress(3) == 7);
   delete ih;
   ih = nullptr;
 }
@@ -155,13 +176,16 @@ TEST_CASE("Set Addreses then increase depth", "[IndexHolder-dynamism]") {
 TEST_CASE("legacy test", "[Legacy-test-from-Y2K]") {
   int indexDepth = 1;
   IndexHolder* myIndex = new IndexHolder(indexDepth);
-  // TODO - no idea what these args mean...
+
   myIndex->SetAddress(1, 3);
-  myIndex->SetAddress(2, 7);
   REQUIRE(myIndex->GetAddress(1) == 3);
+  // nasty interface - no hint that this is going to have no effect
+  myIndex->SetAddress(2, 7);
   REQUIRE(myIndex->GetAddress(2) == -1);
+
   myIndex->SetAddress(0, 7);
-  myIndex->Print();
+  REQUIRE(myIndex->GetAddress(0) == 7);
+
   /*
     cout << "Now print myIndex\n" << flush;
     myIndex->PrintIndex();
@@ -170,14 +194,16 @@ TEST_CASE("legacy test", "[Legacy-test-from-Y2K]") {
     cout << "now expand...\n";
    */
   myIndex->IncreaseDepth();
-  myIndex->Print();
+  REQUIRE(myIndex->GetAddress(0) == 7);
+  REQUIRE(myIndex->GetAddress(1) == 3);
+  REQUIRE(myIndex->GetAddress(2) == 7);
+  REQUIRE(myIndex->GetAddress(3) == 3);
   /*
     myIndex->PrintIndex();
     cout << "=============================" << endl << flush;
     cout << "Now try to decrease the index size...\n";
    */
   REQUIRE(myIndex->DecreaseDepth() == true);
-  myIndex->Print();
 /*
     if (myIndex->DecreaseDepth()){
     cout << "SUCCESS! Now print the shrunken myIndex\n" << flush;
@@ -190,8 +216,10 @@ TEST_CASE("legacy test", "[Legacy-test-from-Y2K]") {
     cin >> input;
     cout << input << " points to " << myIndex->GetAddress(input) << endl;
   */
-  REQUIRE(myIndex->GetAddress(1) == 3);
   REQUIRE(myIndex->GetAddress(0) == 7);
+  REQUIRE(myIndex->GetAddress(1) == 3);
+  REQUIRE(myIndex->GetAddress(2) == -1);
+  REQUIRE(myIndex->GetAddress(3) == -1);
 
   int fd = open("testfile", O_RDWR | O_CREAT | O_TRUNC, 0600);
   REQUIRE (myIndex->Write(fd)); /* {
@@ -205,7 +233,8 @@ TEST_CASE("legacy test", "[Legacy-test-from-Y2K]") {
   // but if we persisted it to disk then we can read it back to memory again
   delete myIndex;
   myIndex = new IndexHolder();
-  myIndex->Print();
+  REQUIRE(myIndex->GetAddress(0) == -1);
+  REQUIRE(myIndex->GetAddress(1) == -1);
   //cout << "now load " << endl;
   REQUIRE (myIndex->Load(fd)); /*{
     cout << "Load file ok\n";
@@ -213,6 +242,7 @@ TEST_CASE("legacy test", "[Legacy-test-from-Y2K]") {
     cout << "Else it is fuct (load)\n";
   }
   */
-  myIndex->Print();
+  REQUIRE(myIndex->GetAddress(0) == 7);
+  REQUIRE(myIndex->GetAddress(1) == 3);
   close(fd);
 }

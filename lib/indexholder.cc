@@ -98,7 +98,7 @@ Write(int fileDescriptor
   if (fileDescriptor < 0){
     return false;
   }
-  if (_indexPointer == 0){
+  if (_indexPointer == nullptr){
     return false;
   }
   
@@ -138,7 +138,7 @@ void
 IndexHolder::
 IncreaseDepth()
 {
-  if (_indexPointer == 0){
+  if (_indexPointer == nullptr){
     return;
   }
 
@@ -191,12 +191,9 @@ DecreaseDepth()
     int* tempIndex = CreateIndex(newNumOfAddresses);
     
     // Copy the old pointer values back into the smaller index
-    for (int i = 0; i < oldNumOfAddresses; i++){
+    for (int i = 0; i < newNumOfAddresses; i++){
       // Assign the xxx pointer
-      std::cout << "DecreaseDepth is out-of-order, ignoring address(" 
-			  << _indexPointer[i] << ")" << std::endl << std::flush;
-      // BUGGY
-      // tempIndex[i] = _indexPointer[i];
+      tempIndex[i] = _indexPointer[i];
     }
     // Update depth
     _indexDepth = newDepth;
@@ -223,7 +220,7 @@ SetAddress(int index,                                   // Index whose address t
 	   int address                                  // The address value to be given
 	   )
 {
-  if (_indexPointer == 0){
+  if (_indexPointer == nullptr){
     return;
   }
 
@@ -236,7 +233,8 @@ SetAddress(int index,                                   // Index whose address t
 =========================================================================================
 Name     | GetAddress
 Purpose  | Return the address for a given index
-Returns  | The address for the given index, or -1 if the index value is out of range
+Returns  | The address for the given index, 
+         | or -1 if the index value is out of range, or doesn't even exist
 =========================================================================================
 */
 int                                                     // The address at the index
@@ -245,17 +243,18 @@ GetAddress(int index                                    // Index whose address t
 	   )
 {
   if ( (index >= 0) && (index < GetNumberOfAddresses()) ){
-    return _indexPointer[index];
-  } else {
-    return -1;
+    if (_indexPointer != nullptr) {
+      return _indexPointer[index];
+    }
   }
+  return -1;
 }
 
 void
 IndexHolder::
 Print()
 {
-  if (_indexPointer == 0){
+  if (_indexPointer == nullptr){
     return;
   }
   char posString[_indexDepth + 1];                      // Get integers in binary string
