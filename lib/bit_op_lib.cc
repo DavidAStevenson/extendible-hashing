@@ -105,6 +105,53 @@ int GetHighestSetBit(int intToTest) {
 
 /*
 =========================================================================================
+Name      | GetLowestBits
+Purpose   | Return the lowest X bits of a given integer
+Params    | theInt - the integer who's lowest bits are to be returned
+          | numOfBits - the number of bits to return
+Returns   | Returns the lowest numOfBits bits of the given integer
+Notes     | - If the numOfBits specified is over the maximum range, it is set to the
+          | maximum and the function continues
+          | - If the numOfBits is less than 0 then 0 is returned
+          | - The lowest order bits are situated at the right. Thus, given numOfBits = 3
+          | and the integer:
+          | 00000000 00000000 00000000 11100101 the return would be
+          | 00000000 00000000 00000000 00000101
+          | Negative numbers return 1's instead of zeros, ie the sign of the number does
+          | not change.
+=========================================================================================
+*/
+int                                                     // Return the lowest bits
+GetLowestBits(int theInt,                               // Integer whose bits to return
+              int numOfBits                             // Number of bits to return
+              )
+{
+  if (numOfBits >= NUMBITS){
+    // if the num of bits to be returned is the same as the number of bits in an integer
+    // then we can just return the integer
+    return theInt;
+  } else if (numOfBits <= 0){
+    // if the num of bits to be returned is zero or less, then we just return zero
+    return 0;
+  }
+
+  int highestBit = BitTest(theInt, 31);                 // Get the highest bit
+
+  theInt = theInt << (NUMBITS - numOfBits);             // Push away unneeded bits
+  theInt = theInt >> 1;                                 // Pull back one bit
+
+  if (highestBit == 1){
+    BitSet(theInt, 31);
+  } else if (highestBit == 0){
+    BitClear(theInt, 31);
+  }
+
+  theInt = theInt >> (NUMBITS - (numOfBits+1));         // Fill with highestBit
+  return theInt;
+}
+
+/*
+=========================================================================================
 Name      | IntInBinary
 Purpose   | Returns an integer in binary form via char*
 Params    | intToConvert - the integer to be converted to binary

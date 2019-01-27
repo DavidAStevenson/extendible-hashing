@@ -142,6 +142,8 @@ IncreaseDepth()
     return;
   }
 
+  // TODO Problems lurk, should we attempt to go deeper than array element can support
+
   // Calculate new depth
   int newDepth = _indexDepth + 1;
   // New number of addresses is 2 times the old number

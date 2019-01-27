@@ -221,6 +221,7 @@ TEST_CASE("legacy test", "[Legacy-test-from-Y2K]") {
   REQUIRE(myIndex->GetAddress(2) == -1);
   REQUIRE(myIndex->GetAddress(3) == -1);
 
+  // TODO don't like opening the files just anywhere, how about a test subdir somewhere?
   int fd = open("testfile", O_RDWR | O_CREAT | O_TRUNC, 0600);
   REQUIRE (myIndex->Write(fd)); /* {
     std::cout << "Wrote file ok\n";

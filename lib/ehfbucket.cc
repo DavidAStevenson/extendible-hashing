@@ -64,7 +64,7 @@ EHFBucket::
 {
   // It is the users responsibility to call write where neccessary.
   // Any information that was not written using Write() will be lost
-  // when the LHFAddress goes out of scope
+  // when the EHFAddress goes out of scope
 }
 
 /*

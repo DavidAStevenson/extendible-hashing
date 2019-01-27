@@ -1,5 +1,5 @@
-#ifndef __LHFConsTS__
-#define __LHFConsTS__
+#ifndef __EHFConsTS__
+#define __EHFConsTS__
 
 // Normal returns
 const int EHF_READOK = 1;                     // Read was successful
@@ -17,5 +17,6 @@ const int EHF_MAXTABLEDEPTH = 5;              // The table has reached maximum d
 const int EHF_FILENOTOPEN = 6;
 const int EHF_WRITEERROR = 7;
 const int EHF_READERROR = 8;
+const int EHF_POORHASHFUNCTION = 9;
 
 #endif

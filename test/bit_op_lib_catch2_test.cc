@@ -85,3 +85,13 @@ TEST_CASE("Test the testing of whether bits are set", "[BitTest]") {
   REQUIRE(result == 1);
 }
 
+TEST_CASE("The lowest 2 bits of 7 (111) is 3 (11)", "[GetLowestBits]") {
+  int result = GetLowestBits(7, 2);
+  REQUIRE(result == 3);
+}
+
+TEST_CASE("The lowest 3 bits of 8 (1000) is 0 (00)", "[GetLowestBits]") {
+  int result = GetLowestBits(8, 3);
+  REQUIRE(result == 0);
+}
+
