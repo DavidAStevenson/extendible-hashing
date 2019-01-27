@@ -22,21 +22,23 @@ make clean
 ```
 
 # Status
-- bit operations library compiled and has tests
-  - some tests with catch2
-  - more tests with googletest (better coverage)
+- various lib/ sources now compiled and have tests (combination of googletest and catch2)
 - indexholder discovered to not even be calling any bit_op_lib functions, however! I probably had intended to refactor common operations into it, but never completed the job.
-  - next step is to add tests on indexholder, and fix bugs
-  - then change indexholder implementation to use bit_op_lib
+  - later look to change indexholder implementation to use bit_op_lib?
   - indexholder interface is unclear
     - initial tests were failing, but after understanding the expected usage, resolved it
 	- rejuvenating this old code is an exercise, but typically something should be done about the interface
 	  - documentation at minimum, alternatively a better interface / implementation would be best
+- look to "modernize" the source
+  - e.g. 
+  	- <string> rather than char strings? 
+	- enums
+- other refactoring
+  - some of the API is not so caller / test friendly
 
 # TODO
-- Complete port of the bit operations library, with tests
-- Complete port and tests of indexholder
-  - there is a bug in the reallocation of the index array upon depth changes to work through
+- Complete tests around main extendiblehashfile
+- Tidy up TODO items throughout source
 - Add a trimmed down Vagrantfile with just the necessary items to build and run
 
 # NOTES
