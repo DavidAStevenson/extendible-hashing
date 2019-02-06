@@ -41,6 +41,17 @@ make clean
 - Tidy up TODO items throughout source
 - Add a trimmed down Vagrantfile with just the necessary items to build and run
 
+# BUGS
+- a fresh development environment (https://github.com/DavidAStevenson/dev-host) is not able to `make gtest` successfully. Must have messed up the googletest library setup somehow...
+```
+Makefile:44: CATCHOBJ is obj/indexholder_catch2_test.o obj/bit_op_lib_catch2_test.o obj/test_catch2.o
+g++ -std=c++14 -Wall -Wextra -c test/gtest/gtest-all.cc -o gtest-all.o
+test/gtest/gtest-all.cc:38:25: fatal error: gtest/gtest.h: No such file or directory
+compilation terminated.
+Makefile:66: recipe for target 'gtest-all.o' failed
+make: *** [gtest-all.o] Error 1
+```
+
 # NOTES
 - some references I found useful for setting up googletest
   - http://xvideos.hatenablog.com/entry/2014/11/24/022149
@@ -53,8 +64,9 @@ make clean
 # LESSONS LEARNED
 - surprisingly, I was using plain "delete" against arrays in the original code
   - when deleting arrays created on the heap with new, delete[] must be used, not delete
-  - this tidbit got a brief mention in my old C++ text, but perhaps I never knew this?
+  - this tidbit got a brief mention in my old C++ text, but perhaps I never knew this? A NetBSD compiler quirk?
 - don't waste time going down the rabbit hole of memory issues
   - just install valgrind, and learn the basics
   - upon using valgrind, I was quickly able to identify an issue that resulted in program crashes
   	- probably, back in 2000/2001, I had got stuck with this issue and that was where I left the code
+  - gdb also essential
