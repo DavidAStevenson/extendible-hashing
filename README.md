@@ -4,6 +4,8 @@ An old project from my university days refreshed to modern C++, with automated t
 - Catch2 is used for testing. (Not included in this repo.)
 - GoogleTest is also used for testing.
 
+The compilation prerequisites are included in [this Vagrantfile repo](https://github.com/DavidAStevenson/dev-host "dev-host"), so get that first if necessary.
+
 Basic compiliation and running notes:
 ```
 make [catch2test] [gtest]
@@ -39,7 +41,6 @@ make clean
 # TODO
 - Complete tests around main extendiblehashfile
 - Tidy up TODO items throughout source
-- Add a trimmed down Vagrantfile with just the necessary items to build and run
 
 # BUGS
 - a fresh development environment (https://github.com/DavidAStevenson/dev-host) is not able to `make gtest` successfully. Must have messed up the googletest library setup somehow...
