@@ -41,7 +41,7 @@ $(LIBDEPS): $(OBJDIR)/%.d: $(LIBDIR)/%.cc
 CATCHSRC  := $(wildcard $(TESTDIR)/*catch2*.cc)
 CATCHOBJ  := $(patsubst $(TESTDIR)/%.cc,$(OBJDIR)/%.o,$(CATCHSRC))
 
-$(CATCH2): $(warning CATCHOBJ is $(CATCHOBJ)) $(LIBOBJS) $(CATCHOBJ)
+$(CATCH2): $(LIBOBJS) $(CATCHOBJ)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 $(CATCHOBJ): $(OBJDIR)/%.o: $(TESTDIR)/%.cc
@@ -63,7 +63,7 @@ $(GTEST): gtest-all.o $(LIBOBJS) $(GTESTOBJ)
 	$(CXX) $(CXXFLAGS) $(LDFLAGS) $^ -o $@
 
 gtest-all.o: $(GTEST_DIR)/gtest-all.cc
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -Itest -c $< -o $@
 
 GTESTINC := -I$(GTEST_DIR)
 $(GTESTOBJ): $(OBJDIR)/%.o: $(TESTDIR)/%.cc
