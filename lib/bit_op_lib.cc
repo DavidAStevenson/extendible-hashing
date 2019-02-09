@@ -93,8 +93,12 @@ Returns   | Returns the bit number of the highest bit which is set
 =================================================================================
 */
 int GetHighestSetBit(int intToTest) {
-  int tester = 1 << (NUMBITS-1);                        // For testing each bit
-  for (int i = (NUMBITS-1); i >= 0; --i){               // Test bits from right to left
+  if (intToTest < 0) {
+    return NUMBITS-1; // silly really, the answer is the same for any negative number
+  }
+
+  int tester = 1 << (NUMBITS-2);                        // For testing each bit
+  for (int i = (NUMBITS-2); i >= 0; --i){               // Test bits from right to left
     if ( (tester & intToTest) == tester ){              // Perform the test
       return i;                                         // Success, return the bit number
     }

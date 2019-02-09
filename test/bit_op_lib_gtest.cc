@@ -68,11 +68,41 @@ TEST(GettingHighestBits, HighestTwoBitsOfSix) {
 }
 */
 
+TEST(GettingHighestSetBit, HighestSetBitOfZero) {
+  int actual = GetHighestSetBit(0);
+  // -1 indicates no bits are set
+  ASSERT_EQ(-1, actual);
+}
+
+TEST(GettingHighestSetBit, HighestSetBitOfOne) {
+  int actual = GetHighestSetBit(1);
+  ASSERT_EQ(0, actual);
+}
+
+TEST(GettingHighestSetBit, HighestSetBitOfTwo) {
+  int actual = GetHighestSetBit(2);
+  ASSERT_EQ(1, actual);
+  actual = GetHighestSetBit(3);
+  ASSERT_EQ(1, actual);
+}
+
 TEST(GettingHighestSetBit, HighestSetBitOfFour) {
   int actual = GetHighestSetBit(4);
-  // 4 is 110... but this test is failing
   ASSERT_EQ(2, actual);
+}
 
+TEST(GettingHighestBits, SecondHighestBitof32bitInt)  {
+  int target = 0;
+  BitSet(target, 30);
+  int actual = GetHighestSetBit(target);
+  ASSERT_EQ(30, actual);
+}
+
+TEST(GettingHighestBits, HighestBitof32bitInt) {
+  int target = 0;
+  BitSet(target, 31);
+  int actual = GetHighestSetBit(target);
+  ASSERT_EQ(31, actual);
 }
 
 TEST(ReversingBits, ReverseBitsOfSix) {
